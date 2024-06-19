@@ -1,1 +1,1 @@
-# Peptidase-Inhibitor-PPI-Pipeline
+# PPI-Pipeline
