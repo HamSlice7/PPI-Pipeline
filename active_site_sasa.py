@@ -4,6 +4,8 @@ from freesasa import Structure, calc
 
 def calc_sasa(pdb_file_path, residue):
    """
+   Calculates the solvent accessibility surface area (SASA) of a active site residue for a peptidase-inhibitor complex
+   
    Input: Path to a pdb file (string), residue number (int)
    Output: Solvent accessibility surface area (SASA) of residue (float)
    """
