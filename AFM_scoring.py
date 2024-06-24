@@ -10,7 +10,7 @@ def AFM_scoring(pdb_file_path, pkl_file_path, pae_cutoff):
     """
     Calculates various scoring metrics from the output files of AlphaFold-Multimer
     
-    Input: path complex pdb file (string) and pkl file (string)
+    Input: path complex pdb file (string), pkl file (string), pae_cutoff (int)
     Output: AFM scoring metrics (dictionary):
     """
 
