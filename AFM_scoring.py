@@ -8,8 +8,16 @@ parser = PDB.PDBParser(QUIET = True)
 
 def AFM_scoring(pdb_file_path, pkl_file_path, pae_cutoff):
     """
-    Input: path complex pdb file and pkl file (string)
-    Output: AFM scoring metrics (dictionary)
+    Input: path complex pdb file (string) and pkl file (string)
+    Output: AFM scoring metrics (dictionary):
+    - LIS
+    - LIA
+    - ipTM
+    - pTM
+    - AFM confidence
+    - pLDDT
+    - PDB file path
+    - PKL file path
     """
 
     structure = parser.get_structure("complex", pdb_file_path)
