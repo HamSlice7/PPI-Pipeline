@@ -41,7 +41,7 @@ apptainer exec -C -B /datashare/alphafold -B $(pwd) -B $SLURM_TMPDIR:/tmp $(pwd)
 
 echo "testing sucessfull"
 
-#execute a test command within the alphapulldown container
+#execute create_individual_features.py command within the alphapulldown container
 apptainer exec -C -B /datashare/alphafold -B $(pwd) -B $SLURM_TMPDIR:/tmp $(pwd)/alphapulldown_0.30.7.sif create_individual_features.py \
   --fasta_paths=$(pwd)/"$bait_fasta_file",$(pwd)/"$candidates_fasta_file" \
   --data_dir=/datashare/alphafold \
