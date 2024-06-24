@@ -3,12 +3,8 @@ import numpy as np
 def reverse_and_scale_pae_matrix(pae_matrix, pae_cutoff):
     """
     Scale PAE matrix such that 0 becomes 1, pae_cutoff becomes 0, and values greater than pae_cutoff are also 0.
-        Args:
-        - PAE matrix (numpy matrix)
-        - pae_cutoff (float)
-
-        Returns:
-        - Transformed PAE matrix (numpy matrix)
+    Input: PAE matrix (numpy matrix), pae_cutoff (float)
+    Output: Transformed PAE matrix (numpy matrix)
     """
 
     #Reverse scale the PAE matrix values where PAE values of 0 equal 1, PAE values equal to the cutoff equal 0 and any value above the PAE cutoff is less than 0
