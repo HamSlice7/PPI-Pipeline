@@ -5,7 +5,7 @@ from freesasa import Structure, calc
 def calc_sasa(pdb_file_path, residue):
    """
    Input: Path to a pdb file (string), residue number (int)
-   Output: Solvent accessibility surface area (SASA) of residue (int)
+   Output: Solvent accessibility surface area (SASA) of residue (float)
    """
 
    #Parse through the PDB file
