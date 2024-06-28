@@ -1,7 +1,7 @@
 import min_peptidase_inhibitor_distance
 import active_site_sasa
 import active_site_sasa_unbound_peptidase
-import AFM_scoring
+from afm_scoring import afm_scoring
 import os
 import pandas as pd
 import re
@@ -47,7 +47,7 @@ for complex in complex_names:
         pkl_file_path = os.path.join(f"{os.getcwd()}/model_output/{complex}", pkl_name)
 
         #Get AFM scoring metrics of the iterating complex and append to the AFM_scoring_metric dictionary
-        AFM_scoring_metric[f"{complex}_{model_num}"] = AFM_scoring.AFM_scoring(pdb_file_path, pkl_file_path, 12)
+        AFM_scoring_metric[f"{complex}_{model_num}"] = afm_scoring(pdb_file_path, pkl_file_path, 12)
 
 #Loop throught each model from unbound peptidase model prediction output.
 for model_num in range(1,6):

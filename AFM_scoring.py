@@ -1,3 +1,4 @@
+from typing import Any
 import os
 from Bio import PDB
 import pickle
@@ -6,10 +7,19 @@ import reverse_and_scale_pae_matrix
 
 parser = PDB.PDBParser(QUIET = True)
 
-def AFM_scoring(pdb_file_path, pkl_file_path, pae_cutoff, peptidase_name, inhibitor_name):
+def afm_scoring(pdb_file_path: str, pkl_file_path: str, pae_cutoff: int, peptidase_name: str, inhibitor_name: str) -> dict[str, Any]:
     """
-    Input: path complex pdb file and pkl file (string)
-    Output: AFM scoring metrics (dictionary)
+    Calculate the AFM scoring metrics for the complex
+
+    Parameters:
+        pdb_file_path: path to the complex pdb file (str)
+        pkl_file_path: path to the complex pkl file (str)
+        pae_cutoff: the PAE cutoff value (int)
+        peptidase_name: the name of the peptidase (str)
+        inhibitor_name: the name of the inhibitor (str)
+    
+    Returns:
+        A dictionary containing the AFM scoring metrics for the complex (dict)
     """
 
     structure = parser.get_structure("complex", pdb_file_path)
