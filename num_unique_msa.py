@@ -1,49 +1,28 @@
 from Bio import SeqIO
-import os
 
+ALIGN_FORMAT: dict[str, str] = {
+    "uniprot.sto": "stockholm",
+    "bfd_uniref_hits.a3m": "fasta",
+    "mgnify_hits.sto": "stockholm",
+    "pdb_hits.sto": "stockholm",
+    "uniref90_hits.sto": "stockholm",
+}
 
-def num_unique_msa(msa_file_path):
-
+def num_unique_msa(msa_file_path: str) -> int:
     """
-    Input: MSA file path (string)
-    Output: Number of unique sequences from the MSA's used to generate features for the protein (int)
+    Return the number of unique alignments from the MSA's used to generate features for the protein
+    
+    Parameters:
+        msa_file_path: The path to the MSA files (str)
+
+    Returns:
+        Number of unique sequences from the MSA's used to generate features for the protein (int)
     """
+    msa_sequences = {}
 
-    #Initializing a list to hold all the sequences from the MSA's of a seq object type
-    msa_sequences = []
+    # For all the MSA files, parse the sequences and add them to the set
+    for align_file, format in ALIGN_FORMAT.items():
+        align = SeqIO.parse(f"{msa_file_path}/{align_file}", format)
+        msa_sequences.union([seq for seq in align])
 
-    #Appending the homologous sequences found in the uniprot database
-    align_uniprot = SeqIO.parse(f"{msa_file_path}/uniprot.sto", "stockholm")
-
-    for record in align_uniprot:
-        msa_sequences.append(record.seq)
-
-    #Appending the homologous sequences from BDF database
-
-    align_bfd = SeqIO.parse(f"{msa_file_path}/bfd_uniref_hits.a3m", "fasta")
-
-    for record in align_bfd:
-        msa_sequences.append(record.seq)
-
-    #Appending the homologous sequences from the MGnify database
-
-    align_mgnify = SeqIO.parse(f"{msa_file_path}/mgnify_hits.sto", "stockholm")
-
-    for record in align_mgnify:
-        msa_sequences.append(record.seq)
-
-    #Appending the homologous sequences from the PDB database
-    align_pdb = SeqIO.parse(f"{msa_file_path}/pdb_hits.sto", "stockholm")
-
-    for record in align_pdb:
-        msa_sequences.append(record.seq)
-
-
-    #Appending the homologous sequences from the Uniref90 database
-    align_uniref90 = SeqIO.parse(f"{msa_file_path}/uniref90_hits.sto", "stockholm")
-
-    for record in align_uniref90:
-        msa_sequences.append(record.seq)
-
-
-    return len(set(msa_sequences))
+    return len(msa_sequences)
