@@ -6,11 +6,9 @@ import reverse_and_scale_pae_matrix
 
 parser = PDB.PDBParser(QUIET = True)
 
-def AFM_scoring(pdb_file_path, pkl_file_path, pae_cutoff):
+def AFM_scoring(pdb_file_path, pkl_file_path, pae_cutoff, peptidase_name, inhibitor_name):
     """
-    Calculates various scoring metrics from the output files of AlphaFold-Multimer
-    
-    Input: path complex pdb file (string), pkl file (string), pae_cutoff (int)
+    Input: path complex pdb file and pkl file (string)
     Output: AFM scoring metrics (dictionary)
     """
 
@@ -50,8 +48,8 @@ def AFM_scoring(pdb_file_path, pkl_file_path, pae_cutoff):
     average_LIS_score = (average_LIS_1 + average_LIS_2) / 2
 
     model_scores = {
-        'Protein 1' : 'B',
-        'Protein 2' : 'C',
+        'Protein 1' : peptidase_name,
+        'Protein 2' : inhibitor_name,
         'LIS' : round(average_LIS_score, 3),
         'LIA' : LIA_sum,
         'ipTM' : round(float(ipTM), 3),

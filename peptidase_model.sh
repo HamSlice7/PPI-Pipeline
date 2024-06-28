@@ -1,11 +1,11 @@
 #!/bin/bash
-#SBATCH --job-name=af_allosteric
+#SBATCH --job-name=af_peptidase
 #SBATCH --account=def-ahamilto
 #SBATCH --time=12:00:00
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=85G
 #SBATCH --gres=gpu:1
-#SBATCH --error=job_o.err_af_allosteric
+#SBATCH --error=job_o.err_af_peptidase
 
 
 # Load modules dependencies.

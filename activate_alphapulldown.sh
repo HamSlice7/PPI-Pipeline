@@ -30,8 +30,12 @@ fi
 ##create bait.txt and candidates.txt from inputted FASTA sequence
 
 #create a flag for the bait fasta file and a flag for the candidates fasta file
-while getopts 'b:c:' OPTION; do
+while getopts 'a:b:c:' OPTION; do
 	case "$OPTION" in
+		a)
+			peptidase_active_site="$OPTARG"
+			;;
+
 		b)
 			bait_fasta_file="$OPTARG"
 			;;
@@ -128,7 +132,13 @@ echo "There are $count_model jobs to be completed for model generation"
 
 echo "Submitting model generation jobs to SLURM"
 
-sbatch --array=1-"$count_model" --dependency=afterok:"$feature_generation_job_ID" alphapulldown_model_generation.sh
+model_count=$(sbatch --array=1-"$count_model" --dependency=afterok:"$feature_generation_job_ID" alphapulldown_model_generation.sh)
 
 echo "Model generation jobs submitted to SLURM"
 
+model_generation_job_ID=$(echo "$model_count" | awk -v num_array="$count_model" '{print $4 "_[1-"num_array"]"}')
+
+#run scoring script after model generation is complete
+sbatch --dependency=afterok:"$model_generation_job_ID" activate_scoring.sh "$peptidase_active_site"
+
+echo "Scoring script submitted to SLURM"
