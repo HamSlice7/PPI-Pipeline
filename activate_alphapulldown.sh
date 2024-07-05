@@ -1,4 +1,5 @@
 #!/bin/bash
+source ./activate_pipeline_functions.sh
 
 ##check to see if alphapulldown container is in pwd, if not pull it
 
@@ -97,48 +98,35 @@ else
 
 fi
 
-##Submit script to create MSA features in an array based off the sum of the number of rown in bait.txt and candidate.txt
+##Submit SLURM job scripts
 
-#Count the number of jobs corresponding to the number of sequences:
-bait_count=`grep -c "" ./bait.txt` #count lines even if the last one has no end of line
+#Submit job for peptidase structure prediction if not complete
+if [ ! -f peptidase_model_prediction.txt ]; then
+	#call function for peptidase_model prediction
+	peptidase_model_prediction
+else
+	echo "Peptidase model generation completed"
 
-candidates_count=`grep -c "" ./candidates.txt` #count lines even if the last one has no end of line
+if [ ! -f feature_generation.txt ]; then
+	#Call function for complex_feature_generation
+	complex_feature_generation
+	#Call function for complex_model_generation
+	complex_model_generation
+	#Call function for complex_scoring
+	complex_scoring "$peptidase_active_site"
+else
+	echo "Complex feature generation completed"
 
-count_features=$(( $bait_count + $candidates_count ))
+if [ ! -f complex_structural_predictions.txt ] then;
+	#Call function for complex_model_generation
+	complex_model_generation
+	#Call function for complex_scoring
+	complex_scoring "$peptidase_active_site"
+else
+	echo "Complex model generation completed"
 
-echo "There are $count_features to be completed for feature generation"
-
-#generate features for proteins in baits.txt and candidates.txt
-echo "Submitting feature generation jobs to SLURM"
-
-feature_count=$(sbatch --array=1-"$count_features" alphapulldown_feature_generation.sh "$bait_fasta_file" "$candidates_fasta_file")
-
-echo "Feature generation jobs submitted to SLURM"
-
-#assigning the feature_count job id to a variable
-feature_generation_job_ID=$(echo "$feature_count" | awk -v num_array="$count_features" '{print $4 "_[1-"num_array"]"}')
-
-echo "Submitting peptidase model prediction to SLURM"
-
-#generate model for the peptidase
-sbatch peptidase_model.sh "$bait_fasta_file"
-
-echo "Peptidase AlphaFold model prediction submitted to SLURM"
-
-##Once all the msa features are created, submit the script that generates the models in pulldown mode
-count_model=$(($bait_count * $candidates_count))
-
-echo "There are $count_model jobs to be completed for model generation"
-
-echo "Submitting model generation jobs to SLURM"
-
-model_count=$(sbatch --array=1-"$count_model" --dependency=afterok:"$feature_generation_job_ID" alphapulldown_model_generation.sh)
-
-echo "Model generation jobs submitted to SLURM"
-
-model_generation_job_ID=$(echo "$model_count" | awk -v num_array="$count_model" '{print $4 "_[1-"num_array"]"}')
-
-#run scoring script after model generation is complete
-sbatch --dependency=afterok:"$model_generation_job_ID" activate_scoring.sh "$peptidase_active_site"
-
-echo "Scoring script submitted to SLURM"
+if [ ! -f activate_scoring.txt ] then;
+	#Call function for complex_scoring
+	complex_scoring "$peptidase_active_site"
+else
+	echo "Scoring completed"

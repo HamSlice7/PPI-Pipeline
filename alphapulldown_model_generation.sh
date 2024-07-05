@@ -34,6 +34,7 @@ apptainer exec -C -B /datashare/alphafold -B $(pwd) -B $SLURM_TMPDIR:/tmp --nv .
   --monomer_objects_dir=$(pwd)/feature_output \
   --job_index=$SLURM_ARRAY_TASK_ID
 
-echo 'Finished structural predictions'
+echo 'Finished complex structural predictions'
 
+touch complex_structural_predictions.txt
 date

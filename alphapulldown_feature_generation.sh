@@ -54,4 +54,6 @@ apptainer exec -C -B /datashare/alphafold -B $(pwd) -B $SLURM_TMPDIR:/tmp $(pwd)
 
 echo "finished feature generation"
 
+touch feature_generation.txt
+
 date
