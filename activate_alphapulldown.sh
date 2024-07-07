@@ -122,9 +122,13 @@ if [ ! -f "$PEPTIDASE_MODEL_CHECKPOINT" ]; then
 		peptidase_SLURM_output=$(sbatch --job-name=peptidase-model peptidase_model.sh "$bait_fasta_file")
 		#Assign the peptidase SLURM job submission to a variable
 		peptidase_model_SLURM_job_ID=$(echo $peptidase_SLURM_output | awk '{print $4}')
+	else
+		peptidase_model_SLURM_job_ID=$(squeue -n "peptidase-model" -h -o "%i")
+
 	fi
 else
 	echo "Peptidase model generation completed"
+	peptidase_model_SLURM_job_ID=""
 fi
 
 if [ ! -f "$FEATURE_GENERATION_CHECKPOINT" ]; then
@@ -136,20 +140,32 @@ if [ ! -f "$FEATURE_GENERATION_CHECKPOINT" ]; then
 	model_generation_SLURM_output=$(sbatch --array=1-"$count_model" --dependency=afterok:"$feature_generation_job_ID" alphapulldown_model_generation.sh)
 	#assigning the model_count job id to a variable
 	model_generation_job_ID=$(echo "$model_generation_SLURM_output" | awk -v num_array="$count_model" '{print $4 "_[1-"num_array"]"}')
-	#Call function for complex_scoring
-	sbatch --dependency=afterok:"$model_generation_job_ID":"$peptidase_model_SLURM_job_ID" activate_scoring.sh "$peptidase_active_site"
+	# Call function for complex_scoring
+    if [ -n "$peptidase_model_SLURM_job_ID" ]; then
+        sbatch --dependency=afterok:"$model_generation_job_ID":"$peptidase_model_SLURM_job_ID" activate_scoring.sh "$peptidase_active_site"
+    else
+        sbatch --dependency=afterok:"$model_generation_job_ID" activate_scoring.sh "$peptidase_active_site"
+    fi
 
 elif [ ! -f "$STURUCTURE_GENERATION_CHECKPOINT" ]; then
 	#Submit job to generate predicted models for each of the complexes
 	model_count=$(sbatch --array=1-"$count_model" alphapulldown_model_generation.sh)
 	#assigning the model_count job id to a variable
 	model_generation_job_ID=$(echo "$model_count" | awk -v num_array="$count_model" '{print $4 "_[1-"num_array"]"}')
-	#Call function for complex_scoring
-	sbatch --dependency=afterok:"$model_generation_job_ID":"$peptidase_model_SLURM_job_ID" activate_scoring.sh "$peptidase_active_site" "$peptidase_active_site"
+	# Call function for complex_scoring
+    if [ -n "$peptidase_model_SLURM_job_ID" ]; then
+        sbatch --dependency=afterok:"$model_generation_job_ID":"$peptidase_model_SLURM_job_ID" activate_scoring.sh "$peptidase_active_site"
+    else
+        sbatch --dependency=afterok:"$model_generation_job_ID" activate_scoring.sh "$peptidase_active_site"
+    fi
 
 elif [ ! -f "$SCORING_GENERATION_CHECKPOINT" ]; then
-	#Call function for complex_scoring
-	sbatch --dependency=afterok:"$peptidase_model_SLURM_job_ID" activate_scoring.sh  "$peptidase_active_site"
+	# Call function for complex_scoring
+    if [ -n "$peptidase_model_SLURM_job_ID" ]; then
+        sbatch --dependency=afterok:"$model_generation_job_ID":"$peptidase_model_SLURM_job_ID" activate_scoring.sh "$peptidase_active_site"
+    else
+        sbatch --dependency=afterok:"$model_generation_job_ID" activate_scoring.sh "$peptidase_active_site"
+    fi
 
 else
 	echo "All steps complete"
