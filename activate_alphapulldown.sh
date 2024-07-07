@@ -98,35 +98,60 @@ else
 
 fi
 
+#Count the number of lines in bait.txt
+bait_count=$(grep -c "" ./bait.txt)
+
+#count the number of lines in candidates.txt
+candidates_count=$(grep -c "" ./candidates.txt)
+
+count_features=$(( $bait_count + $candidates_count ))
+
+count_model=$(($bait_count * $candidates_count))
+
+PEPTIDASE_MODEL_CHECKPOINT=peptidase_model_prediction.txt
+FEATURE_GENERATION_CHECKPOINT=feature_generation.txt
+STURUCTURE_GENERATION_CHECKPOINT=complex_structural_predictions.txt
+SCORING_GENERATION_CHECKPOINT=activate_scoring.txt
+
 ##Submit SLURM job scripts
 
-#Submit job for peptidase structure prediction if not complete
-if [ ! -f peptidase_model_prediction.txt ]; then
-	#call function for peptidase_model prediction
-	peptidase_model_prediction
+if [ ! -f "$PEPTIDASE_MODEL_CHECKPOINT" ]; then
+	#checks to see if a the peptidase-model job is already running
+	if [ -z "$(squeue -n "peptidase-model" -h )" ]; then
+		#Submit job to generate model for the peptidase
+		peptidase_SLURM_output=$(sbatch --job-name=peptidase-model peptidase_model.sh "$bait_fasta_file")
+		#Assign the peptidase SLURM job submission to a variable
+		peptidase_model_SLURM_job_ID=$(echo $peptidase_SLURM_output | awk '{print $4}')
+	fi
 else
 	echo "Peptidase model generation completed"
+fi
 
-if [ ! -f feature_generation.txt ]; then
-	#Call function for complex_feature_generation
-	complex_feature_generation
-	#Call function for complex_model_generation
-	complex_model_generation
+if [ ! -f "$FEATURE_GENERATION_CHECKPOINT" ]; then
+	#Submit job to generate featueres for the peptidase and inhibitor candidates
+	feature_generation_SLURM_output=$(sbatch --array=1-"$count_features" alphapulldown_feature_generation.sh "$bait_fasta_file" "$candidates_fasta_file")
+	#assigning the feature_count job id to a variable
+	feature_generation_job_ID=$(echo "$feature_generation_SLURM_output" | awk -v num_array="$count_features" '{print $4 "_[1-"num_array"]"}')
+	#Submit job to generate predicted models for each of the complexes
+	model_generation_SLURM_output=$(sbatch --array=1-"$count_model" --dependency=afterok:"$feature_generation_job_ID" alphapulldown_model_generation.sh)
+	#assigning the model_count job id to a variable
+	model_generation_job_ID=$(echo "$model_generation_SLURM_output" | awk -v num_array="$count_model" '{print $4 "_[1-"num_array"]"}')
 	#Call function for complex_scoring
-	complex_scoring "$peptidase_active_site"
-else
-	echo "Complex feature generation completed"
+	sbatch --dependency=afterok:"$model_generation_job_ID":"$peptidase_model_SLURM_job_ID" activate_scoring.sh "$peptidase_active_site"
 
-if [ ! -f complex_structural_predictions.txt ] then;
-	#Call function for complex_model_generation
-	complex_model_generation
+elif [ ! -f "$STURUCTURE_GENERATION_CHECKPOINT" ]; then
+	#Submit job to generate predicted models for each of the complexes
+	model_count=$(sbatch --array=1-"$count_model" alphapulldown_model_generation.sh)
+	#assigning the model_count job id to a variable
+	model_generation_job_ID=$(echo "$model_count" | awk -v num_array="$count_model" '{print $4 "_[1-"num_array"]"}')
 	#Call function for complex_scoring
-	complex_scoring "$peptidase_active_site"
-else
-	echo "Complex model generation completed"
+	sbatch --dependency=afterok:"$model_generation_job_ID":"$peptidase_model_SLURM_job_ID" activate_scoring.sh "$peptidase_active_site" "$peptidase_active_site"
 
-if [ ! -f activate_scoring.txt ] then;
+elif [ ! -f "$SCORING_GENERATION_CHECKPOINT" ]; then
 	#Call function for complex_scoring
-	complex_scoring "$peptidase_active_site"
+	sbatch --dependency=afterok:"$peptidase_model_SLURM_job_ID" activate_scoring.sh  "$peptidase_active_site"
+
 else
-	echo "Scoring completed"
+	echo "All steps complete"
+
+fi
