@@ -20,4 +20,3 @@ active_site=$1
 #run main_scoring.py
 python $(pwd)/main_scoring.py "$active_site"
 
-touch activate_scoring.txt
