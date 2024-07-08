@@ -36,5 +36,5 @@ apptainer exec -C -B /datashare/alphafold -B $(pwd) -B $SLURM_TMPDIR:/tmp --nv .
 
 echo 'Finished complex structural predictions'
 
-touch complex_structural_predictions.txt
+
 date
