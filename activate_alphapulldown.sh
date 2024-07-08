@@ -134,9 +134,9 @@ if [ ! -f "$FEATURE_GENERATION_CHECKPOINT" ]; then
 	complex_model_generation_dependency
 	# Call function for complex_scoring
     if [ -n "$peptidase_model_SLURM_job_ID" ]; then
-        scoring_peptidase_dependency
+        complex_scoring_peptidase_dependency
     else
-        scoring_model_dependency
+        complex_scoring_model_dependency
     fi
 
 elif [ ! -f "$STURUCTURE_GENERATION_CHECKPOINT" ]; then
