@@ -108,10 +108,10 @@ count_features=$(( $bait_count + $candidates_count ))
 
 count_model=$(($bait_count * $candidates_count))
 
-PEPTIDASE_MODEL_CHECKPOINT=peptidase_model_prediction.txt
+PEPTIDASE_MODEL_CHECKPOINT=peptidase_model.txt
 FEATURE_GENERATION_CHECKPOINT=feature_generation.txt
-STURUCTURE_GENERATION_CHECKPOINT=complex_structural_predictions.txt
-SCORING_GENERATION_CHECKPOINT=activate_scoring.txt
+STURUCTURE_GENERATION_CHECKPOINT=model_generation.txt
+SCORING_GENERATION_CHECKPOINT=complex_scoring.txt
 
 ##Submit SLURM job scripts
 
@@ -144,17 +144,17 @@ elif [ ! -f "$STURUCTURE_GENERATION_CHECKPOINT" ]; then
 	complex_model_generation
 	# Call function for complex_scoring
     if [ -n "$peptidase_model_SLURM_job_ID" ]; then
-        scoring_peptidase_dependency
+        complex_scoring_peptidase_dependency
     else
-        scoring_model_dependency
+        complex_scoring_model_dependency
     fi
 
 elif [ ! -f "$SCORING_GENERATION_CHECKPOINT" ]; then
 	# Call function for complex_scoring
     if [ -n "$peptidase_model_SLURM_job_ID" ]; then
-        scoring_peptidase_dependency
+        complex_scoring_peptidase_dependency
     else
-        scoring_peptidase_no_dependency
+        complex_scoring_peptidase_no_dependency
     fi
 
 else

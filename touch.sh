@@ -6,4 +6,4 @@
 
 CHECKPOINT=$1
 
-touch "$(pwd)/{$CHECKPOINT}.txt"
+touch "$(pwd)/$CHECKPOINT.txt"
