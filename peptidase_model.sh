@@ -42,3 +42,4 @@ run_alphafold.py \
    --kalign_binary_path=${EBROOTKALIGN}/bin/kalign \
    --max_template_date=2025-01-04 \
    --use_gpu_relax=True
+

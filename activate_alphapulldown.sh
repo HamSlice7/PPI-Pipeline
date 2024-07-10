@@ -1,4 +1,5 @@
 #!/bin/bash
+source ./activate_pipeline_functions.sh
 
 ##check to see if alphapulldown container is in pwd, if not pull it
 
@@ -97,48 +98,66 @@ else
 
 fi
 
-##Submit script to create MSA features in an array based off the sum of the number of rown in bait.txt and candidate.txt
+#Count the number of lines in bait.txt
+bait_count=$(grep -c "" ./bait.txt)
 
-#Count the number of jobs corresponding to the number of sequences:
-bait_count=`grep -c "" ./bait.txt` #count lines even if the last one has no end of line
-
-candidates_count=`grep -c "" ./candidates.txt` #count lines even if the last one has no end of line
+#count the number of lines in candidates.txt
+candidates_count=$(grep -c "" ./candidates.txt)
 
 count_features=$(( $bait_count + $candidates_count ))
 
-echo "There are $count_features to be completed for feature generation"
-
-#generate features for proteins in baits.txt and candidates.txt
-echo "Submitting feature generation jobs to SLURM"
-
-feature_count=$(sbatch --array=1-"$count_features" alphapulldown_feature_generation.sh "$bait_fasta_file" "$candidates_fasta_file")
-
-echo "Feature generation jobs submitted to SLURM"
-
-#assigning the feature_count job id to a variable
-feature_generation_job_ID=$(echo "$feature_count" | awk -v num_array="$count_features" '{print $4 "_[1-"num_array"]"}')
-
-echo "Submitting peptidase model prediction to SLURM"
-
-#generate model for the peptidase
-sbatch peptidase_model.sh "$bait_fasta_file"
-
-echo "Peptidase AlphaFold model prediction submitted to SLURM"
-
-##Once all the msa features are created, submit the script that generates the models in pulldown mode
 count_model=$(($bait_count * $candidates_count))
 
-echo "There are $count_model jobs to be completed for model generation"
+PEPTIDASE_MODEL_CHECKPOINT=peptidase_model.txt
+FEATURE_GENERATION_CHECKPOINT=feature_generation.txt
+STURUCTURE_GENERATION_CHECKPOINT=model_generation.txt
+SCORING_GENERATION_CHECKPOINT=complex_scoring.txt
 
-echo "Submitting model generation jobs to SLURM"
+##Submit SLURM job scripts
 
-model_count=$(sbatch --array=1-"$count_model" --dependency=afterok:"$feature_generation_job_ID" alphapulldown_model_generation.sh)
+if [ ! -f "$PEPTIDASE_MODEL_CHECKPOINT" ]; then
+	#checks to see if a the peptidase-model job is already running
+	if [ -z "$(squeue -n "peptidase-model" -h )" ]; then
+		peptidase_model_prediction
+	else
+		peptidase_model_SLURM_job_ID=$(squeue -n "peptidase-model" -h -o "%i")
+	fi
+else
+	echo "Peptidase model generation completed"
+	peptidase_model_SLURM_job_ID=""
+fi
 
-echo "Model generation jobs submitted to SLURM"
+if [ ! -f "$FEATURE_GENERATION_CHECKPOINT" ]; then
+	#Call function to submit job for feature generation of the complexes
+	complex_feature_generation
+	#Call function to submit job for model generation of the complexes with dependency on feature generation completing 
+	complex_model_generation_dependency
+	# Call function for complex_scoring
+    if [ -n "$peptidase_model_SLURM_job_ID" ]; then
+        complex_scoring_peptidase_dependency
+    else
+        complex_scoring_model_dependency
+    fi
 
-model_generation_job_ID=$(echo "$model_count" | awk -v num_array="$count_model" '{print $4 "_[1-"num_array"]"}')
+elif [ ! -f "$STURUCTURE_GENERATION_CHECKPOINT" ]; then
+	#Call function to submit job for model generation of the complexes
+	complex_model_generation
+	# Call function for complex_scoring
+    if [ -n "$peptidase_model_SLURM_job_ID" ]; then
+        complex_scoring_peptidase_dependency
+    else
+        complex_scoring_model_dependency
+    fi
 
-#run scoring script after model generation is complete
-sbatch --dependency=afterok:"$model_generation_job_ID" activate_scoring.sh "$peptidase_active_site"
+elif [ ! -f "$SCORING_GENERATION_CHECKPOINT" ]; then
+	# Call function for complex_scoring
+    if [ -n "$peptidase_model_SLURM_job_ID" ]; then
+        complex_scoring_peptidase_dependency
+    else
+        complex_scoring_peptidase_no_dependency
+    fi
 
-echo "Scoring script submitted to SLURM"
+else
+	echo "All steps complete"
+
+fi

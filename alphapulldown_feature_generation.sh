@@ -54,4 +54,5 @@ apptainer exec -C -B /datashare/alphafold -B $(pwd) -B $SLURM_TMPDIR:/tmp $(pwd)
 
 echo "finished feature generation"
 
+
 date
