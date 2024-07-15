@@ -34,23 +34,23 @@
 32,THROMBIN (P00735 ),Serine,Rhodniin (Q06684 ),Serine
 33,Alkaline protease 1 (P28296),Serine,AFUEI (Q4WZ11),Serine
 34,Trypsin (P00761),Serine,Trypsin inhibitor 2 (P12071),Serine
-35,ENDOTHIAPEPSIN (P11838),Aspartic,Amoebiasin-2 (Q4GZL2),Cysteine 
-36,BACE (P56817),Aspartic,CmPI-II (P84755),Serine
-37,Cathepsin D (P07339),Aspartic,CmPI-II (P84755),Serine
-38,saccharopepsin (P07267),Aspartic,Amoebiasin-2 (Q4GZL2),Cysteine 
-39,Plasmepsin 2 (P46925 ),Aspartic,CmPI-II (P84755),Serine
-40,CP 1 (Q01957),Cysteine ,H-256 peptide (PTEFFRE),Aspartic
-41,Papain (P00784),Cysteine ,TIMP-1 (P01033),Metallo
-42,Papain (P00784),Cysteine ,H-256 peptide (PTEFFRE),Aspartic
-43,Cathepsin L  (P07711),Cysteine ,TIMP-1 (P01033),Metallo
-44,Papain (P00784),Cysteine ,H-256 peptide (PTEFFRE),Aspartic
-45,MMP-3 (P08254 ),Metallo,Amoebiasin-2 (Q4GZL2),Cysteine 
-46,Thermolysin ( P00800),Metallo,Amoebiasin-2 (Q4GZL2),Cysteine 
+35,ENDOTHIAPEPSIN (P11838),Aspartic,TIMP-1 (P01033),Metallo
+36,BACE (P56817),Aspartic,cystatin B (P04080),Cysteine 
+37,Cathepsin D (P07339),Aspartic,IMPI (P82176),Metallo
+38,saccharopepsin (P07267),Aspartic,Kunitz trypsin inhibitor 4 (Q8RXD5),Serine
+39,Plasmepsin 2 (P46925 ),Aspartic,Protease inhibitor HPI (Q6XNP7),Serine
+40,CP 1 (Q01957),Cysteine ,ovomucoid inhibitor unit 3 (P68390),Serine
+41,Papain (P00784),Cysteine ,Kunitz trypsin inhibitor 4 (Q8RXD5),Serine
+42,Papain (P00784),Cysteine ,saccharopepsin inh (P01094),Aspartic
+43,Cathepsin L  (P07711),Cysteine ,KPFSLLQF (peptide),Aspartic
+44,Papain (P00784),Cysteine ,CmPI-II (P84755),Serine
+45,MMP-3 (P08254 ),Metallo,Chagasin (Q966X9),Cysteine 
+46,Thermolysin ( P00800),Metallo,KPFSLLQF (peptide),Aspartic
 47,MMP-1 (P03956),Metallo,CmPI-II (P84755),Serine
-48,Carboxypeptidase A1 (P15085),Metallo,Amoebiasin-2 (Q4GZL2),Cysteine 
-49,Thermolysin ( P00800),Metallo,CmPI-II (P84755),Serine
-50,Subtilisin A (P00780),Serine,Amoebiasin-2 (Q4GZL2),Cysteine 
-51,Subtilisin A (P00780),Serine,H-256 peptide (PTEFFRE),Aspartic
-52,Trypsin (P00760),Serine,TIMP-1 (P01033),Metallo
-53,Trypsin (P00760),Serine,Amoebiasin-2 (Q4GZL2),Cysteine 
-54,Trypsin (P00760),Serine,H-256 peptide (PTEFFRE),Aspartic
+48,Carboxypeptidase A1 (P15085),Metallo,Potato cathepsin D inhibitor (P16348),Aspartic
+49,Thermolysin ( P00800),Metallo,ALYPYFLPISAK (peptide),Aspartic
+50,Subtilisin A (P00780),Serine,Falstatin (A0A509AJA5),Cysteine 
+51,Subtilisin A (P00780),Serine,KPFSLLQF (peptide),Aspartic
+52,Trypsin (P00760),Serine,SMPI (P01077),Metallo
+53,Trypsin (P00760),Serine,ALYPYFLPISAK (peptide),Aspartic
+54,Trypsin (P00760),Serine,TIMP-1 (P01033),Metallo
