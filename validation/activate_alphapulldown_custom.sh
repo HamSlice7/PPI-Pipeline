@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Count the number of proteins
-feature_array_count=$(grep -c '>' protein_sequences.fasta)
+feature_array_count=$(grep -c '>' pipeline_validation_sequences.fasta)
 
 #Count the number of protein pairs
 model_array_count=$(grep -c "" protein_pairs.txt)
