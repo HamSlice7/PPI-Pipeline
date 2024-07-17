@@ -1,4 +1,5 @@
 import AFM_scoring
+import num_unique_msa
 import os
 import pandas as pd
 import re
@@ -33,6 +34,21 @@ df_AFM_scoring_metric = pd.DataFrame.from_dict(AFM_scoring_metric, orient = "ind
 
 #creating the final data frame
 df_final = df_AFM_scoring_metric
+
+protein_pairs_file = "validation_protein_pairs.txt"
+
+with open (protein_pairs_file, "r") as f:
+    proteins = [line.strip().split(";") for line in f]
+    proteins = [item for list in proteins for item in list]
+
+print(proteins)
+
+msa_depth = {}
+
+for protein in proteins:
+    msa_file_path = f"{os.getcwd()}/feature_output/{protein}"
+    msa_depth[protein] = num_unique_msa.num_unique_msa(msa_file_path)
+
 
 print(df_final)
 
