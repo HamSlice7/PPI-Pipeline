@@ -1,10 +1,69 @@
 #!/bin/bash
 
+#Define variables
+CONTAINER_NAME="alphapulldown_0.30.7.sif"
+CONTAINER_PATH="./$CONTAINER_NAME"
+DOCKER_IMAGE="docker://gallardoalba/alphapulldown:0.30.7"
+
+#Check if the container image exists in the current working directory
+if [ -e "$CONTAINER_PATH" ]; then
+	echo "Container image $CONTAINER_NAME aleardy exists."
+else
+	echo "Container image $CONTAINER_NAME does not exist. Pulling from $DOCKER_IMAGE..."
+
+	#Load Apptainer module
+	module load apptainer/1.2.4
+	#Pull the Docker image using Apptainer
+	apptainer pull "$DOCKER_IMAGE"
+	#Check if the pull was successful
+	if [ -e "$CONTAINER_PATH" ]; then
+		echo "Successfully pulled $CONTAINER_NAME."
+	else
+		echo "Failed to pull $CONTAINER_NAME."
+		exit 1
+	fi
+fi
+
+##create necessary directories
+LOG_PATH="./log"
+FEATURE_PATH="./feature_output"
+MODEL_PATH="./model_output"
+
+#Making a log directory if it does not exist in the current working directory
+if [ -e "$LOG_PATH" ]; then
+	echo "There is already a log directory"
+
+else
+	mkdir log
+	echo "Created $LOG_PATH"
+
+fi
+
+#Making a feature output directory if it does not exist in the current working directory
+if [ -e "$FEATURE_PATH" ]; then
+        echo "There is already a feature output directory"
+
+else
+	mkdir feature_output
+	echo "Created $FEATURE_PATH"
+fi
+
+#Making a model output directory if it does not exist in the current working directory
+if [ -e "$MODEL_PATH" ]; then
+        echo "There is already a model directory"
+
+else
+	mkdir model_output
+	echo "Created $MODEL_PATH"
+
+fi
+
+
 #Count the number of proteins
-feature_array_count=$(grep -c '>' pipeline_validation_sequences.fasta)
+feature_array_count=$(grep -c '>' validation_protein_sequences.fasta)
 
 #Count the number of protein pairs
-model_array_count=$(grep -c "" protein_pairs.txt)
+model_array_count=$(grep -c "" validation_protein_pairs.txt)
 
 #Setting varibales for the checkpoint files
 FEATURE_GENERATION_CHECKPOINT="feature_generation.txt"

@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#SBATCH --job-name=APD_model_generation
+#SBATCH --job-name=model_generation
 #SBATCH --account=def-ahamilto
-#SBATCH --time=4:00:00
+#SBATCH --time=6:00:00
 #SBATCH --gres=gpu:1
 #SBATCH --ntasks-per-node=8
 #SBATCH --mem=64000M
@@ -31,7 +31,7 @@ apptainer exec -C -B /datashare/alphafold -B $(pwd) -B $SLURM_TMPDIR:/tmp --nv .
   --num_predictions_per_model=1 \
   --output_path=$(pwd)/model_output \
   --data_dir=/datashare/alphafold \
-  --protein_lists=$(pwd)/protein_pairs.txt  \
+  --protein_lists=$(pwd)/validation_protein_pairs.txt  \
   --monomer_objects_dir=$(pwd)/feature_output \
   --job_index=$SLURM_ARRAY_TASK_ID
 
