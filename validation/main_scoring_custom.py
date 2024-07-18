@@ -50,6 +50,11 @@ for protein in proteins:
     msa_depth[protein] = num_unique_msa.num_unique_msa(msa_file_path)
 
 
+#creating new columns for the msa depth of the peptidase and inhibitor and mapping values from msa_depth dictionary
+df_final["MSA_depth_peptidase"] = df_final["Protein 1"].map(msa_depth)
+
+df_final["MSA_depth_inhibitors"] = df_final["Protein 2"].map(msa_depth)
+
 print(df_final)
 
 #Save APD_results to a csv file

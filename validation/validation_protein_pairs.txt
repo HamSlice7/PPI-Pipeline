@@ -1,10 +1,10 @@
 CALPAIN;calpastatin
 PAPAIN;equistatin
 CALPAIN;kininogen_inhibitor_unit_2
-CATHESPIN_H;cystatin_a
+Cathepsin_H;cystatin_A
 PAPAIN;falstatin
 CP_2;amoebiasin_2
-CALPAIN_2_CATALYTIC_SUBUNIT;calpastatin_2
+CALPAIN_2;calpastatin_2
 SPOIVFB;bofa
 SERRALYSIN;serralysin_inh
 SERRALYSIN;erwinia_chrysanthemi_inhibitor
@@ -34,7 +34,7 @@ THROMBIN;rhodniin
 ALKALINE_PROTEASE_1;afuei
 TRYPSIN;trypsin_inhibitor_2
 ENDOTHIAPEPSIN;timp_1
-BACE;cystatin_b
+BACE;cystatin_B
 CATHEPSIN_D;impi
 SACCHAROPEPSIN;kunitz_trypsin_inhibitor_4
 PLASMEPSIN_2;protease_inhibitor_hpi
