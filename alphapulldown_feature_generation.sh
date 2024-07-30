@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#SBATCH --job-name=alphapulldown_feature_generation
+#SBATCH --job-name=feature_generation
 #SBATCH --account=def-ahamilto
-#SBATCH --time=3:00:00
+#SBATCH --time=12:00:00
 #SBATCH --cpus-per-task=24
 #SBATCH --mem=125G
 #SBATCH --error=log/alphapulldown_model_feature_generation_%A_%a_err
