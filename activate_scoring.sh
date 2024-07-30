@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=alphapulldown_scoring_metrics
+#SBATCH --job-name=scoring_activation
 #SBATCH --account=def-ahamilto
 #SBATCH --time=1:00:00
 #SBATCH --cpus-per-task=8
