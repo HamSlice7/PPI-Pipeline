@@ -1,5 +1,5 @@
 #!/bin/bash
-source ./activate_pipeline_functions.sh
+source ./SLURM_and_SHELL_scripts/activate_pipeline_functions.sh
 
 ##check to see if alphapulldown container is in pwd, if not pull it
 

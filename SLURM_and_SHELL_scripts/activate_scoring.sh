@@ -18,5 +18,5 @@ module load StdEnv/2020 python/3.10.2
 active_site=$1
 
 #run main_scoring.py
-python $(pwd)/main_scoring.py "$active_site"
+python $(pwd)/python_scripts/main_scoring.py "$active_site"
 
