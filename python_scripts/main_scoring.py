@@ -83,7 +83,7 @@ df_distances = pd.DataFrame.from_dict(distances, orient = "index").rename(column
 #creating the final data frame
 df_final = pd.concat([df_AFM_scoring_metric, df_distances, df_sasa], axis = 1)
 
-#appending ration for change in SASA from unbound to bound state
+#appending ratio for change in SASA from unbound to bound state
 df_final["Change in SASA"] = (df_final["SASA"] /mean_unbound_pepetidase_active_site_sasa) * 100
 
 #creating new columns for the msa depth of the peptidase and inhibitor and mapping values from msa_depth dictionary
