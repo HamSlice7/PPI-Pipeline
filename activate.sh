@@ -115,7 +115,7 @@ SCORING_GENERATION_CHECKPOINT=complex_scoring.txt
 
 ##Submit SLURM job scripts
 
-if [ ! -f "$PEPTIDASE_MODEL_CHECKPOINT" ] && [$peptidase_active_site != 0]; then
+if [ ! -f "$PEPTIDASE_MODEL_CHECKPOINT" ] && [ $peptidase_active_site != 0 ]; then
 	#checks to see if a the peptidase-model job is already running
 	if [ -z "$(squeue -n "peptidase-model" -h )" ]; then
 		peptidase_model_prediction
